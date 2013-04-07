@@ -1,0 +1,20 @@
+{
+  "name": "strictjquery",
+  "version": "0.0.1",
+  "description": "Wish jQuery would throw an error when you have a $('#baadSelector')? use this.js",
+  "main": "StrictjQuery.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/devinrhode2/StrictjQuery.js"
+  },
+  "keywords": [
+    "Strict",
+    "jQuery",
+    "StrictjQuery.js"
+  ],
+  "author": "Devin Rhode (devinrhode2@gmail.com)",
+  "license": "MIT"
+}
