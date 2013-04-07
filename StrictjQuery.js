@@ -1,0 +1,1 @@
+StrictjQuery.js
