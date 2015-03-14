@@ -9,34 +9,8 @@ Download this file and rename it from `StrictjQuery.js.markdown` to `StrictjQuer
 */
 ;(function strictjQuery() {
   'use strict';
-  
-  window.failsafe = 'failsafe';
-  
-  //On failure, StrictjQuery throws it's own `SelectorError` which you can detect like this:
-  /**
-   * try {
-   *   $('#tricky-node').hide()
-   * } catch ( e ) {
-   *   if ( e instanceof SelectorError ) {
-   *     //e.selector === '#tricky-node'
-   *   } else {
-   *     throw e;
-   *   }
-   * }
-   */
-  window.SelectorError = function SelectorErrorFn( selector, context ) {
-    this.message = this.selector = selector;
-                   this.context  = context;
-  };
-  SelectorError.prototype = new Error();
-  
-  // Don't like throwing errors? Defined $.badSelectorAction to be whatever you want.
-  $.badSelectorAction = function badSelectorActionFn( selector, context ) {
-    throw new SelectorError( selector, context );
-    //In your user defined version, you can return a jQuery object here to maintain chaining
-  };
-  
-  //Feel free to stop reading here!
+
+  //could probably intercept $.fn.init instead
   window.oldjQuery = $;
   $ = function strictSelectorOverride( selector, context ) {
     
@@ -66,6 +40,34 @@ Download this file and rename it from `StrictjQuery.js.markdown` to `StrictjQuer
       }
     }
   };
+
+  
+  window.failsafe = 'failsafe';
+  
+  //On failure, StrictjQuery throws it's own `SelectorError` which you can detect like this:
+  /**
+   * try {
+   *   $('#tricky-node').hide()
+   * } catch ( e ) {
+   *   if ( e instanceof SelectorError ) {
+   *     //e.selector === '#tricky-node'
+   *   } else {
+   *     throw e;
+   *   }
+   * }
+   */
+  window.SelectorError = function SelectorErrorFn( selector, context ) {
+    this.message = this.selector = selector;
+                   this.context  = context;
+  };
+  SelectorError.prototype = new Error();
+  
+  // Don't like throwing errors? Defined $.badSelectorAction to be whatever you want.
+  $.badSelectorAction = function badSelectorActionFn( selector, context ) {
+    throw new SelectorError( selector, context );
+    //In your user defined version, you can return a jQuery object here to maintain chaining
+  };
+
 })();
 /*
 ```
