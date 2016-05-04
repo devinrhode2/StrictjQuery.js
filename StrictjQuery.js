@@ -2,21 +2,23 @@
 
 ## StrictjQuery.js
 
-#### Wish jQuery would bark when you had a bad selector? Maybe `$('#buttonn')` was a typo or `#button` actually isn't on the page. With StrictjQuery.js, an error will be thrown so you can see and fix the issue. When you want to fail safely, jQuery's default behavior, do this: `$('#button', failsafe)`
+#### Wish jQuery would bark when you had a bad selector? Maybe `$('#buttonn')` was a typo or `#button` actually isn't
+on the page. With StrictjQuery.js, an error will be thrown so you can see and fix the issue.
+When you want to fail safely, jQuery's default behavior, do this: `$('#button', failsafe)`
 
-Download this file and rename it from `StrictjQuery.js.markdown` to `StrictjQuery.js` to use (otherwise you loose this documentation)
 ```javascript
 */
-;(function strictjQuery() {
-  'use strict';
+;(function() {
+  'use strict';//optional
 
   //could probably intercept $.fn.init instead
-  window.oldjQuery = $;
-  $ = function strictSelectorOverride( selector, context ) {
+  var oldjQuery = $;
+  window.oldjQuery = oldjQuery;
+  window.$ = function strictSelectorOverride( selector, context ) {
     
     //if it's not a string or clearly html..
-    if ( typeof selector !== 'string'
-         || ( selector.charAt(          0          ) === '<' &&
+    if ( typeof selector !== 'string' ||
+            ( selector.charAt(          0          ) === '<' &&
               selector.charAt( selector.length - 1 ) === '>' &&
               selector.length >= 3 )
        )
@@ -32,7 +34,8 @@ Download this file and rename it from `StrictjQuery.js.markdown` to `StrictjQuer
         if (result.length > 0) {
           return result;
         } else {
-          return $.badSelectorAction.call(this, selector, context);
+          $.badSelectorAction.call(this, selector, context);
+          return result;
         }
       } else {
         //.length is undefined or not a number, result is unknown, just return it.
@@ -49,23 +52,22 @@ Download this file and rename it from `StrictjQuery.js.markdown` to `StrictjQuer
    * try {
    *   $('#tricky-node').hide()
    * } catch ( e ) {
-   *   if ( e instanceof SelectorError ) {
+   *   if ( e.selector || e instanceof SelectorError ) {
    *     //e.selector === '#tricky-node'
    *   } else {
    *     throw e;
    *   }
    * }
    */
-  window.SelectorError = function SelectorErrorFn( selector, context ) {
+  var SelectorError = function SelectorErrorFn( selector, context ) {
     this.message = this.selector = selector;
                    this.context  = context;
   };
   SelectorError.prototype = new Error();
-  
+  window.SelectorError = SelectorError;
   // Don't like throwing errors? Defined $.badSelectorAction to be whatever you want.
-  $.badSelectorAction = function badSelectorActionFn( selector, context ) {
-    throw new SelectorError( selector, context );
-    //In your user defined version, you can return a jQuery object here to maintain chaining
+  window.$.badSelectorAction = function badSelectorActionFn( selector, context ) {    
+    console.warn('$(\''+selector+'\') selected nothing. Do $(sel, "failsafe") to silence warning.');    //In your user defined version, you can return a jQuery object here to maintain chaining
   };
 
 })();
