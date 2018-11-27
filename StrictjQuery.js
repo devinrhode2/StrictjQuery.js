@@ -59,13 +59,14 @@ When you want to fail safely, jQuery's default behavior, do this: `$('#button', 
    *   }
    * }
    */
-  var SelectorError = function SelectorErrorFn( selector, context ) {
-    this.message = this.selector = selector;
-                   this.context  = context;
-  };
-  SelectorError.prototype = new Error();
-  window.SelectorError = SelectorError;
-  // Don't like throwing errors? Defined $.badSelectorAction to be whatever you want.
+  //   var SelectorError = function SelectorErrorFn( selector, context ) {
+  //     this.message = this.selector = selector;
+  //                    this.context  = context;
+  //   };
+  //   SelectorError.prototype = new Error();
+  //   window.SelectorError = SelectorError;
+
+  // Don't like throwing errors? (No I dont right now!) Define $.badSelectorAction to be whatever you want.
   window.$.badSelectorAction = function badSelectorActionFn( selector, context ) {    
     console.warn('$(\''+selector+'\') selected nothing. Do $(sel, "failsafe") to silence warning.');    //In your user defined version, you can return a jQuery object here to maintain chaining
   };
